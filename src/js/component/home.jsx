@@ -1,24 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+const URL = "https://assets.breatheco.de/apis/fake/todos/user/enrique_ibarra"
 
-//create your first component
 const Home = () => {
+
+	const [state, setState] = useState([]);
+	const [load, setLoad] = useState(false);
+	const [newTask, setnewTask] = useState("");
+
+const getData = async () =>{
+	try {
+		const response = await fetch(URL, { method: "GET" });
+		const data = await response.json();
+		setState(data);
+		console.log(data);
+		setLoad(true);
+	  } catch (err) {
+		console.log("err");
+	  }
+  }
+
+useEffect(() => {
+	getData()
+	}, []);
+
+const addNewTask = async () => {
+	try {
+	  const data =[...state, {label: newTask, done: false}]
+	  const response = await fetch(URL, { method: "PUT", body: JSON.stringify(data), headers:{"Content-Type": "application/json"}});
+	  console.log(response);
+	  getData();
+  } catch (err) {
+	  console.log("err");
+	}
+  }; 
+
+const handleChange = (e) => {
+	setnewTask(e.target.value);
+}
+
 	return (
 		<div className="text-center">
-			<h1 className="text-center mt-5">Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working...
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
+			<input onChange={handleChange} type="text" placeholder="add task"/>
+		<button onClick={addNewTask}>Add New Task</button>
+		{ load ? state.map(task => { 
+			return <h1 key={task.label}> {task.label} </h1>}) 
+			: <h1>Loading...</h1>}
 		</div>
 	);
 };
