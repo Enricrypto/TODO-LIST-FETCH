@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const URL = "https://assets.breatheco.de/apis/fake/todos/user/enrique_ibarra"
+const HEADERS = { "Content-Type": "application/json" }
 
 const Home = () => {
 
@@ -29,7 +30,7 @@ const Home = () => {
 		try {
 			setLoad(true);
 			const data = [...state, { label: newTask, done: false }]
-			const response = await fetch(URL, { method: "PUT", body: JSON.stringify(data), headers: { "Content-Type": "application/json" } });
+			const response = await fetch(URL, { method: "PUT", body: JSON.stringify(data), headers: HEADERS });
 			console.log(response);
 			getData();
 			setLoad(false);
@@ -41,12 +42,11 @@ const Home = () => {
 	const doneTask = async (indice) => {
 		try {
 			const newState = [...state];
-			setTaskDone(newState[indice]["done"]); 
-			console.log("aqui", !taskDone, taskDone); 
+			setTaskDone(newState[indice].done);
+			console.log(state); 
 			newState[indice].done = !taskDone;
-			// console.log(state, taskDone, indice); 
 			setLoad(true);
-			const response = await fetch(URL, { method: "PUT", body: JSON.stringify(newState), headers: { "Content-Type": "application/json" } });
+			const response = await fetch(URL, { method: "PUT", body: JSON.stringify(newState), headers: HEADERS });
 			console.log(response);
 			await getData();
 			setLoad(false);
@@ -61,7 +61,7 @@ const Home = () => {
 				return indice !== index
 			})
 			setLoad(true);
-			const response = await fetch(URL, { method: "PUT", body: JSON.stringify(newState), headers: { "Content-Type": "application/json" } });
+			const response = await fetch(URL, { method: "PUT", body: JSON.stringify(newState), headers: HEADERS });
 			console.log(response);
 			await getData();
 			setLoad(false);
@@ -69,8 +69,6 @@ const Home = () => {
 			console.log("err");
 		}
 	};
-
-
 
 	return (
 		<div className="text-center">
@@ -85,7 +83,7 @@ const Home = () => {
 						<h1 key={task.label}> {task.label} </h1>
 						{task.done ? <button className="btn btn-secondary" onClick={() => doneTask(index) }>Mark as Undone</button> : <button className="btn btn-success" onClick={() => doneTask(index) }>Mark as Done</button>}
 						<button className="btn btn-danger mt-1" onClick={() => { deleteTask(index) }}>Delete Task</button>
-					</div>
+					</div> 
 				})}
 			</div>
 		</div>
