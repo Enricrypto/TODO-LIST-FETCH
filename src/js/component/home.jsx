@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AddTask from "./AddTask.jsx";
 
 const URL = "https://assets.breatheco.de/apis/fake/todos/user/enrique_ibarra"
 const HEADERS = { "Content-Type": "application/json" }
@@ -74,7 +75,7 @@ const Home = () => {
 		<div className="text-center">
 			<div className="input-btn">
 			<input className="input" onChange={(e) => setNewTask(e.target.value)} type="text" placeholder="write down your task" />
-			<button className="btn btn-primary add-button" onClick={ addNewTask }>Add New Task</button>
+			<AddTask addNewTask={addNewTask}/>
 			{load ? <div className="spinner spinner-border m-5" role="status">
 				<span className="visually-hidden">Loading...</span>
 			</div>
